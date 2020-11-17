@@ -1,0 +1,64 @@
+{% comment %}
+
+calculate cosine.
+
+input: x
+output: res
+
+Reference source:
+
+https://www.codingconnect.net/c-program-cosine-series/
+
+void main()
+{
+    int i, n;
+    float x, sum=1, t=1;
+    clrscr();
+     
+    printf(" Enter the value for x : ");
+    scanf("%f",&x);
+     
+    printf(" Enter the value for n : ");
+    scanf("%d",&n);
+     
+    x=x*3.14159/180;
+     
+    /* Loop to calculate the value of Cosine */
+    for(i=1;i<=n;i++)
+    {
+        t=t*(-1)*x*x/(2*i*(2*i-1));
+        sum=sum+t;
+    }
+     
+    printf(" The value of Cos(%f) is : %.4f", x, sum);
+    getch();
+}
+{% endcomment %}
+
+{% assign t = 1 %}
+{% assign x_pow2 = x | times: x %}
+{% assign sum = 1 %}
+
+{% for i in (1..10) %}
+
+    {% assign i_2 = i | times: 2 %}
+    {% assign i_2_minus_1 = i_2 | minus: 1 %}
+    {% assign fact = i_2 | times: i_2_minus_1 %}
+    {% assign t = t | times: -1 | times: x_pow2 | divided_by: fact %}
+    {% assign sum = sum | plus: t %}
+
+{% endfor %}
+                     
+{% assign res = sum %}
+
+<!--h7>DEBUG: math_cos: {{ x }} = {{ res }}</h7-->
+
+{% comment %}           
+DEBUG: math_cos: 0.0 = 1.0
+DEBUG: math_cos: 1.570796326795 = -1.0343933442909677e-13
+DEBUG: math_cos: 3.14159265359 = -0.9999999999243492
+DEBUG: math_cos: 4.712388980385 = 5.53744832639934e-07
+DEBUG: math_cos: -1.570796326795 = -1.0343933442909677e-13
+DEBUG: math_cos: -3.14159265359 = -0.9999999999243492
+DEBUG: math_cos: -4.712388980385 = 5.53744832639934e-07
+{% endcomment %}
