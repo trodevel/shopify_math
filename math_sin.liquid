@@ -1,0 +1,66 @@
+{% comment %}
+
+calculate sine.
+
+input: x
+output: res
+
+Source:
+
+https://www.codingconnect.net/c-program-sine-series/
+
+void main()
+{
+    int i, n;
+    float x, sum, t;
+    clrscr();
+     
+    printf(" Enter the value for x : ");
+    scanf("%f",&x);
+     
+    printf(" Enter the value for n : ");
+    scanf("%d",&n);
+     
+    x=x*3.14159/180;
+    t=x;
+    sum=x;
+     
+    /* Loop to calculate the value of Sine */
+    for(i=1;i<=n;i++)
+    {
+        t=(t*(-1)*x*x)/(2*i*(2*i+1));
+        sum=sum+t;
+    }
+     
+    printf(" The value of Sin(%f) = %.4f",x,sum);
+    getch();
+}
+{% endcomment %}
+
+{% assign t = x %}
+{% assign x_pow2 = x | times: x %}
+{% assign sum = x %}
+
+{% for i in (1..10) %}
+
+    {% assign i_2 = i | times: 2 %}
+    {% assign i_2_plus_1 = i_2 | plus: 1 %}
+    {% assign fact = i_2 | times: i_2_plus_1 %}
+    {% assign t = t | times: -1 | times: x_pow2 | divided_by: fact %}
+    {% assign sum = sum | plus: t %}
+
+{% endfor %}
+                     
+{% assign res = sum %}
+
+<h7>DEBUG: math_sin: {{ x }} = {{ res }}</h7>
+
+{% comment %}           
+DEBUG: math_sin: 0.0 = 0.0
+DEBUG: math_sin: 1.570796326795 = 1.0
+DEBUG: math_sin: 3.14159265359 = 1.01406891471823e-11
+DEBUG: math_sin: 4.712388980385 = -0.9999998861884022
+DEBUG: math_sin: -1.570796326795 = -1.0
+DEBUG: math_sin: -3.14159265359 = -1.01406891471823e-11
+DEBUG: math_sin: -4.712388980385 = 0.9999998861884022
+{% endcomment %}
