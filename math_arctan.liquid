@@ -1,0 +1,87 @@
+{% comment %}
+
+calculate arctan.
+
+input: x
+output: res
+
+https://www.dreamincode.net/forums/topic/127925-c-arctanx-formula/
+
+#include <iostream>
+#include <math.h>
+
+int main (int argc, char * const argv[]) {
+    double x,incr, sum =0;
+    int i,j,k;
+    std::cout << "Enter x: ";
+    std::cin >> x;
+    std::cout << "Enter integer k: ";
+    std::cin >> k;
+    j=3;
+    for (i=0; i < k; i++) {
+	incr = pow(-1,i)*pow(x,2*i+1)/(2*i+1);
+	
+	std::cout << "incr: " << incr << "\n";
+	sum += incr;
+	std::cout << sum << "\n";
+    }
+    std::cout << "The partial sum from the first "<< k << " terms: " << sum;
+    
+    return 0;
+}
+
+{% endcomment %}
+
+{% assign sum = 0.0 %}
+
+{% if x < -1 or x > 1 %}
+    <h3>ERROR: math_arctan: x {{ x }} is not in the range [-1, 1]</h3>
+
+{% else %}
+
+{% for i in (0..9) %}
+
+    {% assign i_2 = i | times: 2 %}
+    {% assign i_2_plus_1 = i_2 | plus: 1 %}
+
+    {% include 'math_pow' with x: x | plus: 0.0, n: i_2_plus_1 %}
+
+    {% assign x_pow_i_2_plus_1 = res %}
+
+    {% include 'math_pow' with x: -1, n: i %}
+
+    {% assign minus_1_pow_i = res %}
+
+    {% assign incr = minus_1_pow_i | times: x_pow_i_2_plus_1 | divided_by: i_2_plus_1  %}
+
+    {% assign sum = sum | plus: incr %}
+
+    <!--h4>DEBUG: math_arctan: i {{ i }} x_pow_i_2_plus_1 {{ x_pow_i_2_plus_1 }} incr {{ incr }} = sum {{ sum }}</h4-->
+
+
+{% endfor %}
+{% endif %}
+
+{% assign res = sum %}
+
+<!--h7>DEBUG: math_arctan: {{ x }} = {{ res }}</h7-->
+
+{% comment %}
+
+y	x = arctan(y)
+degrees	radians
+-1.732050808	-60°	-π/3
+-1	-45°	-π/4
+-0.577350269	-30°	-π/6
+0	0°	0
+0.577350269	30°	π/6
+1	45°	π/4
+1.732050808	60°	π/3
+
+DEBUG: math_arctan: -1 = -0.7604599047323506
+DEBUG: math_arctan: -0.79 = -0.6683985093665566
+DEBUG: math_arctan: -0.577350269 = -0.5235984183474633
+DEBUG: math_arctan: 0 = 0.0
+DEBUG: math_arctan: 0.577350269 = 0.5235984183474633
+DEBUG: math_arctan: 1 = 0.7604599047323506
+{% endcomment %}
